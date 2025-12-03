@@ -1,0 +1,745 @@
+
+
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deepak Kumar Upadhyay | Full Stack Architect</title>
+    <meta name="description" content="Premium Portfolio of Deepak Kumar Upadhyay, engineering digital experiences with Java, React, and Cloud technologies.">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/split-type"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        display: ['Syne', 'sans-serif'],
+                    },
+                    colors: {
+                        accent: '#00E5FF', // Electric Cyan
+                        purple: '#9D00FF', // Deep Violet
+                        dark: '#050507',
+                        surface: '#0A0A0F',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #050507;
+            color: #E2E8F0;
+            cursor: none; /* We build our own cursor */
+            overflow-x: hidden;
+        }
+
+        /* Noise Texture */
+        .noise {
+            position: fixed; inset: 0; z-index: 9000; pointer-events: none; opacity: 0.035;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #050507; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #00E5FF; }
+
+        /* Typography Helpers */
+        .text-outline {
+            -webkit-text-stroke: 1px rgba(255, 255, 255, 0.15);
+            color: transparent;
+        }
+        
+        /* Loader Styles */
+        .loader-overlay {
+            position: fixed; inset: 0; z-index: 9999; background: #050507;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+        }
+        .loader-text {
+            font-family: 'Syne', sans-serif; font-size: 4vw; font-weight: 800;
+            background: linear-gradient(to right, #00E5FF, #9D00FF);
+            -webkit-background-clip: text; color: transparent; opacity: 0; margin-bottom: 1rem;
+        }
+        .counter {
+            font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 700; color: white;
+        }
+        .loader-bar-bg {
+            width: 250px; height: 2px; background: rgba(255,255,255,0.1); margin-top: 10px; overflow: hidden; border-radius: 4px;
+        }
+        .loader-progress {
+            height: 100%; width: 0%; 
+            background: linear-gradient(90deg, #00E5FF, #9D00FF);
+            box-shadow: 0 0 15px #00E5FF;
+        }
+
+        /* Custom Cursor */
+        .cursor-dot, .cursor-circle {
+            position: fixed; top: 0; left: 0; border-radius: 50%; pointer-events: none; z-index: 9999; mix-blend-mode: difference;
+        }
+        .cursor-dot { width: 8px; height: 8px; background: white; }
+        .cursor-circle { 
+            width: 40px; height: 40px; border: 1px solid rgba(255,255,255,0.5);
+            transition: transform 0.15s ease-out, width 0.3s, height 0.3s;
+        }
+        body.hover-active .cursor-circle {
+            width: 80px; height: 80px; background: rgba(255,255,255,0.1); border-color: transparent; backdrop-filter: blur(2px);
+        }
+        /* Hide custom cursor on mobile */
+        @media (max-width: 768px) {
+            .cursor-dot, .cursor-circle { display: none; }
+            body { cursor: auto; }
+        }
+
+        /* Animations */
+        .reveal-char { transform: translateY(100%); opacity: 0; }
+        .card-hover:hover { transform: translateY(-10px); box-shadow: 0 20px 40px -10px rgba(0, 229, 255, 0.1); border-color: rgba(0, 229, 255, 0.3); }
+        
+        /* Marquee */
+        .marquee-inner { display: flex; width: fit-content; animation: scroll 20s linear infinite; }
+        @keyframes scroll { to { transform: translateX(-50%); } }
+
+        /* Glass Header */
+        .glass-nav {
+            background: rgba(5, 5, 7, 0.7); backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        /* Mobile Menu */
+        .mobile-menu {
+            position: fixed; inset: 0; background: #050507; z-index: 49;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            transform: translateY(-100%); transition: transform 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+        .mobile-menu.open { transform: translateY(0); }
+    </style>
+</head>
+<body class="antialiased selection:bg-cyan-500 selection:text-black">
+
+    <div class="noise"></div>
+
+    <!-- Cinematic Loader - Restored Structure -->
+    <div class="loader-overlay">
+        <div class="loader-text">LOADING</div>
+        <div class="counter">0%</div>
+        <div class="loader-bar-bg"><div class="loader-progress"></div></div>
+    </div>
+
+    <!-- Custom Cursor -->
+    <div class="cursor-dot"></div>
+    <div class="cursor-circle"></div>
+
+    <!-- Mobile Navigation Overlay -->
+    <div class="mobile-menu" id="mobile-menu">
+        <a href="#about" class="text-3xl font-display font-bold text-white mb-6 hover:text-accent transition-colors mobile-link">About</a>
+        <a href="#services" class="text-3xl font-display font-bold text-white mb-6 hover:text-accent transition-colors mobile-link">Services</a>
+        <a href="#experience" class="text-3xl font-display font-bold text-white mb-6 hover:text-accent transition-colors mobile-link">Career</a>
+        <a href="#projects" class="text-3xl font-display font-bold text-white mb-6 hover:text-accent transition-colors mobile-link">Works</a>
+        
+        <!-- RESUME PATH HERE (Mobile) -->
+        <a href="/resume.pdf" download class="px-8 py-3 mt-4 bg-white text-black text-lg font-bold uppercase tracking-widest rounded-full hover:bg-accent transition-colors mobile-link">Resume</a>
+        
+        <button id="close-menu" class="absolute top-6 right-6 text-white"><i data-lucide="x" class="w-8 h-8"></i></button>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 glass-nav transform -translate-y-full transition-transform duration-700" id="navbar">
+        <div class="container mx-auto px-6 h-20 flex justify-between items-center">
+            <a href="#" class="text-2xl font-display font-bold tracking-tighter text-white hover-trigger">
+                DEEPAK<span class="text-accent">.</span>
+            </a>
+            
+            <div class="hidden md:flex items-center gap-8">
+                <a href="#about" class="text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-white transition-colors hover-trigger">About</a>
+                <a href="#services" class="text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-white transition-colors hover-trigger">Services</a>
+                <a href="#experience" class="text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-white transition-colors hover-trigger">Career</a>
+                <a href="#projects" class="text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-white transition-colors hover-trigger">Works</a>
+                
+                <!-- RESUME PATH HERE (Desktop) -->
+                <a href="/resume.pdf" download class="px-6 py-2 bg-white text-black text-xs font-bold uppercase tracking-widest rounded-full hover:bg-accent transition-colors hover-trigger">Resume</a>
+            </div>
+            
+            <!-- Mobile Menu Icon -->
+            <button class="md:hidden text-white hover-trigger" id="open-menu"><i data-lucide="menu" class="w-8 h-8"></i></button>
+        </div>
+        <!-- Scroll Progress Bar -->
+        <div class="absolute bottom-0 left-0 h-[2px] bg-accent transition-all duration-100" id="progress-bar" style="width: 0%"></div>
+    </nav>
+
+    <main>
+        <!-- HERO SECTION -->
+        <section class="min-h-screen flex items-center justify-center relative overflow-hidden pt-20">
+            <!-- Ambient Glows -->
+            <div class="absolute top-1/4 left-1/4 w-64 md:w-96 h-64 md:h-96 bg-purple-900/30 rounded-full blur-[120px] animate-pulse"></div>
+            <div class="absolute bottom-1/4 right-1/4 w-64 md:w-96 h-64 md:h-96 bg-cyan-900/30 rounded-full blur-[120px] animate-pulse delay-1000"></div>
+
+            <div class="container mx-auto px-6 relative z-10">
+                <div class="max-w-5xl mx-auto">
+                    <p class="text-accent font-mono text-xs md:text-sm mb-4 md:mb-6 fade-in-up opacity-0">Based in Mumbai, India</p>
+                    
+                    <h1 class="text-5xl md:text-8xl lg:text-9xl font-display font-bold leading-[0.9] text-white mb-8 tracking-tighter">
+                        <div class="overflow-hidden"><span class="block split-text">FULL STACK</span></div>
+                        <div class="overflow-hidden"><span class="block split-text text-gray-500">ARCHITECT</span></div>
+                    </h1>
+
+                    <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8 mt-12 border-t border-white/10 pt-8 fade-in-up opacity-0" style="animation-delay: 0.4s">
+                        <div class="max-w-md">
+                            <p class="text-gray-400 text-base md:text-lg font-light leading-relaxed">
+                                I am <strong class="text-white">Deepak Kumar Upadhyay</strong>. I bridge the gap between academic theory and industry reality, building scalable web applications and robust cloud infrastructure.
+                            </p>
+                        </div>
+                        
+                        <div class="flex flex-col sm:flex-row gap-6 items-start sm:items-center">
+                            <!-- Resume Button (New Addition for Home Screen) -->
+                            <a href="/resume.pdf" download="Deepak_Kumar_Upadhyay_Resume.pdf" class="px-6 py-3 border border-accent/30 text-accent text-xs font-bold uppercase tracking-widest rounded-full hover:bg-accent hover:text-black transition-all hover-trigger flex items-center gap-2 group">
+                                <span>Download Resume</span>
+                                <i data-lucide="download" class="w-4 h-4 group-hover:translate-y-1 transition-transform"></i>
+                            </a>
+
+                            <!-- Explore Project Button -->
+                            <div class="flex gap-4 items-center">
+                                <a href="#projects" class="w-14 h-14 rounded-full border border-white/20 flex items-center justify-center hover:bg-white hover:text-black transition-all hover-trigger group">
+                                    <i data-lucide="arrow-down-right" class="w-5 h-5 group-hover:rotate-[-45deg] transition-transform"></i>
+                                </a>
+                                <div class="flex flex-col justify-center">
+                                    <span class="text-[10px] uppercase tracking-widest text-gray-500">Explore</span>
+                                    <span class="text-xs font-bold text-white">My Portfolio</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- INFINITE MARQUEE -->
+        <div class="py-12 md:py-16 border-y border-white/5 bg-surface overflow-hidden rotate-[-1deg] origin-left scale-105">
+            <div class="marquee-inner">
+                <div class="flex items-center gap-8 md:gap-12 px-6">
+                    <span class="text-5xl md:text-8xl font-display font-bold text-white">JAVA</span>
+                    <span class="text-5xl md:text-8xl font-display font-bold text-outline">REACT</span>
+                    <span class="text-5xl md:text-8xl font-display font-bold text-white">NODE.JS</span>
+                    <span class="text-5xl md:text-8xl font-display font-bold text-outline">AWS</span>
+                    <span class="text-5xl md:text-8xl font-display font-bold text-white">DOCKER</span>
+                    <span class="text-5xl md:text-8xl font-display font-bold text-outline">SQL</span>
+                     <!-- Duplicated for seamless loop -->
+                    <span class="text-5xl md:text-8xl font-display font-bold text-white">JAVA</span>
+                    <span class="text-5xl md:text-8xl font-display font-bold text-outline">REACT</span>
+                    <span class="text-5xl md:text-8xl font-display font-bold text-white">NODE.JS</span>
+                    <span class="text-5xl md:text-8xl font-display font-bold text-outline">AWS</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ABOUT & STATS -->
+        <section id="about" class="py-24 md:py-32 container mx-auto px-6">
+            <div class="grid lg:grid-cols-2 gap-12 md:gap-20">
+                <div class="relative group">
+                    <div class="absolute inset-0 bg-gradient-to-r from-accent to-purple rounded-2xl opacity-20 blur-2xl group-hover:opacity-40 transition-opacity duration-700"></div>
+                    <!-- Coding Image -->
+                    <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=2072&auto=format&fit=crop" alt="Developer Workspace" class="relative w-full h-[400px] md:h-[600px] object-cover rounded-2xl grayscale hover:grayscale-0 transition-all duration-700">
+                </div>
+
+                <div class="flex flex-col justify-center">
+                    <span class="text-accent font-mono text-sm mb-6">01. / THE MANIFESTO</span>
+                    <h2 class="text-3xl md:text-5xl font-display font-bold text-white mb-8">Engineering <br>The Future.</h2>
+                    
+                    <div class="space-y-6 text-gray-400 text-lg font-light">
+                        <p>
+                            I am a final-year Information Technology student at <span class="text-white">Shree L. R. Tiwari College of Engineering</span>. My journey began with a Diploma in Computer Engineering, where I fell in love with the logic behind the code.
+                        </p>
+                        <p>
+                            Today, as the <span class="text-white">Co-Technical Head of ITSA</span>, I lead technical initiatives, organize hackathons, and mentor over 100 students. I don't just write code; I build communities and solve real-world problems.
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-8 mt-12 pt-8 border-t border-white/10">
+                        <div>
+                            <div class="text-4xl md:text-5xl font-display font-bold text-white mb-2">3+</div>
+                            <div class="text-xs font-bold uppercase tracking-widest text-gray-500">Years Experience</div>
+                        </div>
+                        <div>
+                            <div class="text-4xl md:text-5xl font-display font-bold text-white mb-2">20+</div>
+                            <div class="text-xs font-bold uppercase tracking-widest text-gray-500">Projects Delivered</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SERVICES -->
+        <section id="services" class="py-24 md:py-32 bg-surface border-t border-white/5">
+            <div class="container mx-auto px-6">
+                <span class="text-purple font-mono text-sm mb-6 block">02. / WHAT I DO</span>
+                <h2 class="text-3xl md:text-6xl font-display font-bold text-white mb-12 md:mb-20">My <span class="text-gray-600">Expertise</span></h2>
+
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Card 1 -->
+                    <div class="p-8 md:p-10 rounded-2xl bg-dark border border-white/5 card-hover transition-all duration-300 group">
+                        <div class="w-14 h-14 rounded-full bg-accent/10 flex items-center justify-center mb-8 text-accent group-hover:scale-110 transition-transform">
+                            <i data-lucide="layout" class="w-8 h-8"></i>
+                        </div>
+                        <h3 class="text-2xl font-display font-bold text-white mb-4">Web Development</h3>
+                        <p class="text-gray-400 leading-relaxed">
+                            Building responsive, pixel-perfect web applications using React.js, HTML5, and Tailwind CSS. I focus on accessibility (WCAG) and performance optimization.
+                        </p>
+                    </div>
+
+                    <!-- Card 2 -->
+                    <div class="p-8 md:p-10 rounded-2xl bg-dark border border-white/5 card-hover transition-all duration-300 group">
+                        <div class="w-14 h-14 rounded-full bg-purple/10 flex items-center justify-center mb-8 text-purple group-hover:scale-110 transition-transform">
+                            <i data-lucide="server" class="w-8 h-8"></i>
+                        </div>
+                        <h3 class="text-2xl font-display font-bold text-white mb-4">Backend Architecture</h3>
+                        <p class="text-gray-400 leading-relaxed">
+                            Designing robust server-side logic with Node.js and RESTful APIs. I ensure efficient database management with SQL for scalable, secure solutions.
+                        </p>
+                    </div>
+
+                    <!-- Card 3 -->
+                    <div class="p-8 md:p-10 rounded-2xl bg-dark border border-white/5 card-hover transition-all duration-300 group">
+                        <div class="w-14 h-14 rounded-full bg-green-500/10 flex items-center justify-center mb-8 text-green-500 group-hover:scale-110 transition-transform">
+                            <i data-lucide="cloud" class="w-8 h-8"></i>
+                        </div>
+                        <h3 class="text-2xl font-display font-bold text-white mb-4">Cloud & DevOps</h3>
+                        <p class="text-gray-400 leading-relaxed">
+                            Deploying applications on AWS and managing CI/CD pipelines using Docker. I bridge the gap between development and operations for smooth delivery.
+                        </p>
+                    </div>
+
+                     <!-- Card 4 (New) -->
+                     <div class="p-8 md:p-10 rounded-2xl bg-dark border border-white/5 card-hover transition-all duration-300 group">
+                        <div class="w-14 h-14 rounded-full bg-pink-500/10 flex items-center justify-center mb-8 text-pink-500 group-hover:scale-110 transition-transform">
+                            <i data-lucide="palette" class="w-8 h-8"></i>
+                        </div>
+                        <h3 class="text-2xl font-display font-bold text-white mb-4">UI/UX Design</h3>
+                        <p class="text-gray-400 leading-relaxed">
+                            Creating intuitive, user-centric interfaces with Figma and Bootstrap. I focus on user flow and visual consistency to deliver engaging digital products.
+                        </p>
+                    </div>
+
+                    <!-- Card 5 (New) -->
+                    <div class="p-8 md:p-10 rounded-2xl bg-dark border border-white/5 card-hover transition-all duration-300 group">
+                        <div class="w-14 h-14 rounded-full bg-yellow-500/10 flex items-center justify-center mb-8 text-yellow-500 group-hover:scale-110 transition-transform">
+                            <i data-lucide="users" class="w-8 h-8"></i>
+                        </div>
+                        <h3 class="text-2xl font-display font-bold text-white mb-4">Technical Mentorship</h3>
+                        <p class="text-gray-400 leading-relaxed">
+                            Guiding students and junior developers in best practices. As Co-Technical Head, I lead workshops and hackathons to foster a culture of learning.
+                        </p>
+                    </div>
+
+                    <!-- Card 6 (New) -->
+                    <div class="p-8 md:p-10 rounded-2xl bg-dark border border-white/5 card-hover transition-all duration-300 group">
+                        <div class="w-14 h-14 rounded-full bg-blue-500/10 flex items-center justify-center mb-8 text-blue-500 group-hover:scale-110 transition-transform">
+                            <i data-lucide="zap" class="w-8 h-8"></i>
+                        </div>
+                        <h3 class="text-2xl font-display font-bold text-white mb-4">System Optimization</h3>
+                        <p class="text-gray-400 leading-relaxed">
+                            Improving application performance and load times. I specialize in code optimization and asset management to ensure lightning-fast user experiences.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- EXPERIENCE TIMELINE -->
+        <section id="experience" class="py-24 md:py-32 container mx-auto px-6">
+            <div class="max-w-4xl mx-auto">
+                <span class="text-accent font-mono text-sm mb-6 block text-center">03. / THE JOURNEY</span>
+                <h2 class="text-3xl md:text-5xl font-display font-bold text-white mb-20 text-center">Career <span class="text-gray-600">Path</span></h2>
+
+                <div class="space-y-12 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-slate-300 before:to-transparent">
+                    
+                    <!-- Job 1 -->
+                    <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
+                        <div class="flex items-center justify-center w-10 h-10 rounded-full border border-white/20 bg-dark shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 relative z-10">
+                            <div class="w-3 h-3 bg-accent rounded-full animate-pulse"></div>
+                        </div>
+                        <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-8 rounded-2xl border border-white/10 bg-surface hover:border-accent/50 transition-all">
+                            <div class="flex flex-col md:flex-row justify-between items-start mb-2 gap-2">
+                                <h3 class="font-bold text-white text-xl">Co-Technical Head</h3>
+                                <span class="text-xs font-bold bg-accent/10 text-accent px-2 py-1 rounded">Aug 2025 - Present</span>
+                            </div>
+                            <div class="text-purple text-sm font-bold mb-4">ITSA, SLRTCE • Mumbai</div>
+                            <ul class="text-gray-400 text-sm list-disc list-inside space-y-1">
+                                <li>Lead technical initiatives & mentor 100+ students.</li>
+                                <li>Organize hackathons & coding bootcamps.</li>
+                                <li>Bridge gap between academic curriculum & industry.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Job 2 -->
+                    <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
+                        <div class="flex items-center justify-center w-10 h-10 rounded-full border border-white/20 bg-dark shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 relative z-10">
+                            <div class="w-3 h-3 bg-purple rounded-full"></div>
+                        </div>
+                        <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-8 rounded-2xl border border-white/10 bg-surface hover:border-purple/50 transition-all">
+                            <div class="flex flex-col md:flex-row justify-between items-start mb-2 gap-2">
+                                <h3 class="font-bold text-white text-xl">Frontend Web Developer</h3>
+                                <span class="text-xs font-bold bg-white/10 text-white px-2 py-1 rounded">2024 - 2025</span>
+                            </div>
+                            <div class="text-purple text-sm font-bold mb-4">Tsunami Media • Mumbai</div>
+                            <ul class="text-gray-400 text-sm list-disc list-inside space-y-1">
+                                <li>Developed responsive, mobile-first web apps.</li>
+                                <li>Optimized performance for 40% faster loads.</li>
+                                <li>Implemented WCAG accessibility standards.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Job 3 -->
+                    <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
+                        <div class="flex items-center justify-center w-10 h-10 rounded-full border border-white/20 bg-dark shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 relative z-10">
+                            <div class="w-3 h-3 bg-gray-500 rounded-full"></div>
+                        </div>
+                        <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-8 rounded-2xl border border-white/10 bg-surface hover:border-white/30 transition-all">
+                            <div class="flex flex-col md:flex-row justify-between items-start mb-2 gap-2">
+                                <h3 class="font-bold text-white text-xl">Software Intern</h3>
+                                <span class="text-xs font-bold bg-white/10 text-white px-2 py-1 rounded">Internship</span>
+                            </div>
+                            <div class="text-purple text-sm font-bold mb-4">Raberman Software • Mumbai</div>
+                            <ul class="text-gray-400 text-sm list-disc list-inside space-y-1">
+                                <li>Full-stack development using Java & JavaScript.</li>
+                                <li>Participated in Agile sprints & code reviews.</li>
+                                <li>Debugged technical issues for stability.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- PROJECTS -->
+        <section id="projects" class="py-24 md:py-32 bg-surface border-t border-white/5">
+            <div class="container mx-auto px-6">
+                <span class="text-accent font-mono text-sm mb-6 block">04. / SELECTED WORKS</span>
+                <h2 class="text-3xl md:text-6xl font-display font-bold text-white mb-20">Featured <span class="text-gray-600">Projects</span></h2>
+
+                <div class="grid gap-12 md:gap-24">
+                    
+                    <!-- Project 1 -->
+                    <div class="group grid md:grid-cols-2 gap-8 items-center">
+                        <div class="relative overflow-hidden rounded-2xl border border-white/10 h-[300px] md:h-[400px] hover-trigger">
+                            <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-all z-10"></div>
+                            <img src="https://images.unsplash.com/photo-1555421689-d68471e189f2?q=80&w=2070&auto=format&fit=crop" alt="Full Stack App" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        </div>
+                        <div class="order-2 md:order-1">
+                            <span class="text-accent font-mono text-xs mb-2 block">01 — React & Node.js</span>
+                            <h3 class="text-3xl font-bold text-white mb-4">Full-Stack Web Application</h3>
+                            <p class="text-gray-400 leading-relaxed mb-6">
+                                An end-to-end web solution featuring secure user authentication, complex RESTful API integration, and a MySQL database. Fully deployed with an automated CI/CD pipeline.
+                            </p>
+                            <div class="flex flex-wrap gap-2 mb-8">
+                                <span class="px-3 py-1 border border-white/10 rounded-full text-xs text-gray-300">React</span>
+                                <span class="px-3 py-1 border border-white/10 rounded-full text-xs text-gray-300">Node.js</span>
+                                <span class="px-3 py-1 border border-white/10 rounded-full text-xs text-gray-300">MySQL</span>
+                            </div>
+                            <a href="#" class="text-white font-bold hover:text-accent transition-colors inline-flex items-center gap-2 hover-trigger">View Project <i data-lucide="arrow-up-right" class="w-4 h-4"></i></a>
+                        </div>
+                    </div>
+
+                    <!-- Project 2 -->
+                    <div class="group grid md:grid-cols-2 gap-8 items-center">
+                        <div class="order-2">
+                            <span class="text-purple font-mono text-xs mb-2 block">02 — AWS & Mobile</span>
+                            <h3 class="text-3xl font-bold text-white mb-4">Cloud-Based Mobile App</h3>
+                            <p class="text-gray-400 leading-relaxed mb-6">
+                                A cross-platform mobile experience focused on scalability. Integrated cloud services for real-time data synchronization and efficient state management across devices.
+                            </p>
+                            <div class="flex flex-wrap gap-2 mb-8">
+                                <span class="px-3 py-1 border border-white/10 rounded-full text-xs text-gray-300">AWS</span>
+                                <span class="px-3 py-1 border border-white/10 rounded-full text-xs text-gray-300">Mobile Dev</span>
+                                <span class="px-3 py-1 border border-white/10 rounded-full text-xs text-gray-300">Cloud Sync</span>
+                            </div>
+                            <a href="#" class="text-white font-bold hover:text-purple transition-colors inline-flex items-center gap-2 hover-trigger">View Project <i data-lucide="arrow-up-right" class="w-4 h-4"></i></a>
+                        </div>
+                        <div class="relative overflow-hidden rounded-2xl border border-white/10 h-[300px] md:h-[400px] order-1 hover-trigger">
+                            <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-all z-10"></div>
+                            <img src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?q=80&w=2070&auto=format&fit=crop" alt="Mobile App" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        </div>
+                    </div>
+
+                    <!-- Project 3 -->
+                    <div class="group grid md:grid-cols-2 gap-8 items-center">
+                        <div class="relative overflow-hidden rounded-2xl border border-white/10 h-[300px] md:h-[400px] hover-trigger">
+                            <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-all z-10"></div>
+                            <img src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=1974&auto=format&fit=crop" alt="Chat App" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        </div>
+                        <div class="order-2 md:order-1">
+                            <span class="text-accent font-mono text-xs mb-2 block">03 — WebSockets</span>
+                            <h3 class="text-3xl font-bold text-white mb-4">Realtime Chat Application</h3>
+                            <p class="text-gray-400 leading-relaxed mb-6">
+                                High-velocity messaging architecture implementing WebSockets for sub-millisecond latency. Features ephemeral data handling and a modern, responsive UI.
+                            </p>
+                            <div class="flex flex-wrap gap-2 mb-8">
+                                <span class="px-3 py-1 border border-white/10 rounded-full text-xs text-gray-300">Socket.io</span>
+                                <span class="px-3 py-1 border border-white/10 rounded-full text-xs text-gray-300">Node.js</span>
+                                <span class="px-3 py-1 border border-white/10 rounded-full text-xs text-gray-300">Express</span>
+                            </div>
+                            <a href="#" class="text-white font-bold hover:text-accent transition-colors inline-flex items-center gap-2 hover-trigger">View Project <i data-lucide="arrow-up-right" class="w-4 h-4"></i></a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- CONTACT -->
+        <section id="contact" class="py-32 container mx-auto px-6 relative">
+            <div class="max-w-4xl mx-auto relative z-10">
+                <span class="text-purple font-mono text-sm mb-6 block text-center">05. / GET IN TOUCH</span>
+                <h2 class="text-4xl md:text-7xl font-display font-bold text-white mb-12 text-center">Let's <span class="text-transparent bg-clip-text bg-gradient-to-r from-accent to-purple">Build</span> Together.</h2>
+                
+                <div class="glass-card p-8 md:p-16 rounded-3xl border border-white/10">
+                    <form id="contact-form" class="space-y-8">
+                        <div class="grid md:grid-cols-2 gap-8">
+                            <div class="group">
+                                <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Name</label>
+                                <input type="text" name="user_name" class="w-full bg-surface border-b border-white/10 py-4 text-white focus:border-accent focus:outline-none transition-colors" placeholder="John Doe" required>
+                            </div>
+                            <div class="group">
+                                <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Email</label>
+                                <input type="email" name="user_email" class="w-full bg-surface border-b border-white/10 py-4 text-white focus:border-accent focus:outline-none transition-colors" placeholder="john@example.com" required>
+                            </div>
+                        </div>
+                        <div class="group">
+                            <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Message</label>
+                            <textarea name="message" rows="4" class="w-full bg-surface border-b border-white/10 py-4 text-white focus:border-accent focus:outline-none transition-colors" placeholder="Tell me about your project..." required></textarea>
+                        </div>
+                        <button type="submit" id="submit-btn" class="w-full py-5 bg-white text-black font-bold uppercase tracking-widest rounded-lg hover:bg-accent transition-colors hover-trigger mt-4">Send Message</button>
+                        <p id="form-status" class="text-center text-sm mt-4 min-h-[24px]"></p>
+                    </form>
+
+                    <div class="flex flex-col md:flex-row justify-center gap-6 md:gap-10 mt-16 border-t border-white/10 pt-8">
+                        <a href="https://linkedin.com/in/deepak-upadhyay" target="_blank" class="text-gray-400 hover:text-white transition-colors hover-trigger flex items-center justify-center gap-2"><i data-lucide="linkedin" class="w-5 h-5"></i> LinkedIn</a>
+                        <a href="mailto:udeepak896@gmail.com" class="text-gray-400 hover:text-white transition-colors hover-trigger flex items-center justify-center gap-2"><i data-lucide="mail" class="w-5 h-5"></i> Email</a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors hover-trigger flex items-center justify-center gap-2"><i data-lucide="github" class="w-5 h-5"></i> GitHub</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="py-12 border-t border-white/5 text-center bg-surface">
+            <p class="text-gray-600 text-xs uppercase tracking-[0.2em]">&copy; 2025 Deepak Kumar Upadhyay. All Rights Reserved.</p>
+        </footer>
+
+    </main>
+
+    <script>
+        // Init Icons
+        lucide.createIcons();
+
+        // Mobile Menu Logic
+        const menuButton = document.getElementById('open-menu');
+        const closeButton = document.getElementById('close-menu');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        function toggleMenu() {
+            mobileMenu.classList.toggle('open');
+            document.body.classList.toggle('overflow-hidden');
+        }
+
+        menuButton.addEventListener('click', toggleMenu);
+        closeButton.addEventListener('click', toggleMenu);
+
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', toggleMenu);
+        });
+
+        // 1. Cinematic Loader
+        const counter = document.querySelector('.counter');
+        const loaderBar = document.querySelector('.loader-progress');
+        const loader = document.querySelector('.loader-overlay');
+        const loaderText = document.querySelector('.loader-text');
+        let count = 0;
+
+        // Fade in loader text
+        gsap.to(loaderText, { opacity: 1, duration: 1 });
+        
+        const updateCounter = () => {
+            count += Math.floor(Math.random() * 5) + 1;
+            if (count > 100) count = 100;
+            counter.innerText = count + "%";
+            loaderBar.style.width = count + '%';
+            
+            if (count < 100) {
+                requestAnimationFrame(updateCounter);
+            } else {
+                setTimeout(() => {
+                    gsap.to(loader, { 
+                        yPercent: -100, 
+                        duration: 1.2, 
+                        ease: 'power4.inOut',
+                        onComplete: initSiteAnimations 
+                    });
+                }, 500);
+            }
+        };
+        requestAnimationFrame(updateCounter);
+
+        // 2. Smooth Scroll (Optimized)
+        const lenis = new Lenis({
+            duration: 1.2,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            direction: 'vertical',
+            gestureDirection: 'vertical',
+            smooth: true,
+            mouseMultiplier: 1,
+            smoothTouch: false,
+            touchMultiplier: 2,
+        });
+
+        function raf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+
+        // 3. Custom Cursor
+        const cursorDot = document.querySelector('.cursor-dot');
+        const cursorCircle = document.querySelector('.cursor-circle');
+        let mouseX = 0, mouseY = 0;
+        let cursorX = 0, cursorY = 0;
+
+        window.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            cursorDot.style.transform = `translate(${mouseX}px, ${mouseY}px)`;
+        });
+
+        const animateCursor = () => {
+            cursorX += (mouseX - cursorX) * 0.15;
+            cursorY += (mouseY - cursorY) * 0.15;
+            cursorCircle.style.transform = `translate(${cursorX - 20}px, ${cursorY - 20}px)`;
+            requestAnimationFrame(animateCursor);
+        };
+        
+        // Only run cursor animation on desktop
+        if (window.matchMedia("(min-width: 768px)").matches) {
+            animateCursor();
+        }
+
+        document.querySelectorAll('.hover-trigger').forEach(trigger => {
+            trigger.addEventListener('mouseenter', () => document.body.classList.add('hover-active'));
+            trigger.addEventListener('mouseleave', () => document.body.classList.remove('hover-active'));
+        });
+
+        // 4. GSAP Site Animations
+        function initSiteAnimations() {
+            gsap.registerPlugin(ScrollTrigger);
+
+            // Nav Reveal
+            gsap.to('#navbar', { y: 0, duration: 1, ease: 'power4.out', delay: 0.2 });
+
+            // Hero Text Reveal
+            const splitTypes = document.querySelectorAll('.split-text');
+            splitTypes.forEach((char) => {
+                const text = new SplitType(char, { types: 'chars' });
+                gsap.from(text.chars, {
+                    y: 100, opacity: 0, duration: 1.5, stagger: 0.02, ease: 'power4.out', delay: 0.5
+                });
+            });
+
+            // Fade In Up Elements
+            gsap.utils.toArray('.fade-in-up').forEach((el) => {
+                gsap.to(el, { opacity: 1, y: 0, duration: 1, ease: 'power3.out', delay: 0.8 });
+            });
+
+            // Text Rotator
+            const words = ["Web Architect", "Java Expert", "Cloud Native"];
+            let i = 0;
+            setInterval(() => {
+                i = (i + 1) % words.length;
+                const rotator = document.getElementById('text-rotator');
+                if(rotator) gsap.to(rotator, { y: -i * 28, duration: 0.6, ease: 'power3.inOut' });
+            }, 3000);
+
+            // Scroll Triggers for Sections
+            gsap.utils.toArray('section').forEach(section => {
+                gsap.from(section.querySelectorAll('h2, h3, p, .service-card, .project-card'), {
+                    scrollTrigger: {
+                        trigger: section,
+                        start: 'top 80%',
+                        toggleActions: 'play none none reverse'
+                    },
+                    y: 50,
+                    opacity: 0,
+                    duration: 1,
+                    stagger: 0.1,
+                    ease: 'power3.out'
+                });
+            });
+            
+            // Progress Bar
+            window.addEventListener('scroll', () => {
+                const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+                const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                const scrolled = (winScroll / height) * 100;
+                document.getElementById("progress-bar").style.width = scrolled + "%";
+            });
+        }
+
+        // 5. Google Sheets Integration
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwh2YyyNkzpDatNX1_4MUrHZJXNGhUHdwycsp4wcuGcM4gi1uAGbyY7iFOg2WacH1VO/exec"; // Replace with your actual script URL
+        
+        document.getElementById('contact-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('submit-btn');
+            const status = document.getElementById('form-status');
+            
+            btn.innerHTML = 'Sending...';
+            
+            // Create FormData object
+            const formData = new FormData(this);
+            
+            fetch(GOOGLE_SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors', // IMPORTANT: Allows the request to be sent without strict CORS checks
+                body: formData
+            })
+            .then(() => { // With no-cors, we get an opaque response, so we assume success
+                btn.innerHTML = 'Message Sent';
+                status.innerHTML = "Received! I'll get back to you shortly.";
+                status.className = 'text-center text-sm mt-4 text-accent';
+                this.reset();
+                setTimeout(() => { btn.innerHTML = 'Send Message'; status.innerHTML = ''; }, 5000);
+            })
+            .catch(error => {
+                console.error('Error!', error.message);
+                btn.innerHTML = 'Send Message'; 
+                status.innerHTML = "Something went wrong. Please try again."; 
+                status.className = 'text-center text-sm mt-4 text-red-500';
+            });
+        });
+    </script>
+</body>
+</html>
+
+
+
+
+
+
