@@ -1,4 +1,7 @@
 
+
+
+
 <!DOCTYPE html>
 <html lang="en" class="dark">
 <head>
@@ -136,7 +139,7 @@
 
     <div class="noise"></div>
 
-    <!-- Cinematic Loader - Restored Structure -->
+    <!-- Cinematic Loader -->
     <div class="loader-overlay">
         <div class="loader-text">LOADING</div>
         <div class="counter">0%</div>
@@ -154,8 +157,8 @@
         <a href="#experience" class="text-3xl font-display font-bold text-white mb-6 hover:text-accent transition-colors mobile-link">Career</a>
         <a href="#projects" class="text-3xl font-display font-bold text-white mb-6 hover:text-accent transition-colors mobile-link">Works</a>
         
-        <!-- MOBILE RESUME BUTTON (FIXED) -->
-        <button onclick="triggerDownload()" class="px-8 py-3 mt-4 bg-white text-black text-lg font-bold uppercase tracking-widest rounded-full hover:bg-accent transition-colors mobile-link">Resume</button>
+        <!-- MOBILE RESUME BUTTON (NATIVE LINK) -->
+        <a href="./resume.pdf" target="_blank" class="px-8 py-3 mt-4 bg-white text-black text-lg font-bold uppercase tracking-widest rounded-full hover:bg-accent transition-colors mobile-link">Download Resume</a>
         
         <button id="close-menu" class="absolute top-6 right-6 text-white"><i data-lucide="x" class="w-8 h-8"></i></button>
     </div>
@@ -173,8 +176,8 @@
                 <a href="#experience" class="text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-white transition-colors hover-trigger">Career</a>
                 <a href="#projects" class="text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-white transition-colors hover-trigger">Works</a>
                 
-                <!-- DESKTOP RESUME BUTTON (FIXED) -->
-                <button onclick="triggerDownload()" class="px-6 py-2 bg-white text-black text-xs font-bold uppercase tracking-widest rounded-full hover:bg-accent transition-colors hover-trigger">Resume</button>
+                <!-- DESKTOP RESUME BUTTON (NATIVE LINK) -->
+                <a href="./resume.pdf" target="_blank" class="px-6 py-2 bg-white text-black text-xs font-bold uppercase tracking-widest rounded-full hover:bg-accent transition-colors hover-trigger">Resume</a>
             </div>
             
             <!-- Mobile Menu Icon -->
@@ -208,11 +211,11 @@
                         </div>
                         
                         <div class="flex flex-col sm:flex-row gap-6 items-start sm:items-center">
-                            <!-- Resume Button (Hero Section - FIXED) -->
-                            <button onclick="triggerDownload()" class="px-6 py-3 border border-accent/30 text-accent text-xs font-bold uppercase tracking-widest rounded-full hover:bg-accent hover:text-black transition-all hover-trigger flex items-center gap-2 group">
+                            <!-- HERO RESUME BUTTON (NATIVE LINK) -->
+                            <a href="./resume.pdf" target="_blank" class="px-6 py-3 border border-accent/30 text-accent text-xs font-bold uppercase tracking-widest rounded-full hover:bg-accent hover:text-black transition-all hover-trigger flex items-center gap-2 group">
                                 <span>Download Resume</span>
                                 <i data-lucide="download" class="w-4 h-4 group-hover:translate-y-1 transition-transform"></i>
-                            </button>
+                            </a>
 
                             <!-- Explore Project Button -->
                             <div class="flex gap-4 items-center">
@@ -525,9 +528,9 @@
                     </form>
 
                     <div class="flex flex-col md:flex-row justify-center gap-6 md:gap-10 mt-16 border-t border-white/10 pt-8">
-                        <a href="https://linkedin.com/in/deepak-upadhyay" target="_blank" class="text-gray-400 hover:text-white transition-colors hover-trigger flex items-center justify-center gap-2"><i data-lucide="linkedin" class="w-5 h-5"></i> LinkedIn</a>
+                        <a href="https://www.linkedin.com/in/deepak-kumar-upadhyay-a66285296/" target="_blank" class="text-gray-400 hover:text-white transition-colors hover-trigger flex items-center justify-center gap-2"><i data-lucide="linkedin" class="w-5 h-5"></i> LinkedIn</a>
                         <a href="mailto:udeepak896@gmail.com" class="text-gray-400 hover:text-white transition-colors hover-trigger flex items-center justify-center gap-2"><i data-lucide="mail" class="w-5 h-5"></i> Email</a>
-                        <a href="#" class="text-gray-400 hover:text-white transition-colors hover-trigger flex items-center justify-center gap-2"><i data-lucide="github" class="w-5 h-5"></i> GitHub</a>
+                        <a href="https://github.com/Deepak7900" class="text-gray-400 hover:text-white transition-colors hover-trigger flex items-center justify-center gap-2"><i data-lucide="github" class="w-5 h-5"></i> GitHub</a>
                     </div>
                 </div>
             </div>
@@ -694,18 +697,7 @@
             });
         }
 
-        // 5. Function to Trigger PDF Download
-        window.triggerDownload = function() {
-            // This creates a hidden link and clicks it to force download behavior
-            const link = document.createElement('a');
-            link.href = 'resume.pdf';
-            link.download = 'Deepak_Kumar_Upadhyay_Resume.pdf';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        };
-
-        // 6. Google Sheets Integration with Honeypot
+        // 5. Google Sheets Integration with Honeypot
         const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwh2YyyNkzpDatNX1_4MUrHZJXNGhUHdwycsp4wcuGcM4gi1uAGbyY7iFOg2WacH1VO/exec"; // Replace with your actual script URL
         
         document.getElementById('contact-form').addEventListener('submit', function(e) {
